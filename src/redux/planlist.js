@@ -12,21 +12,14 @@ const reducer = function (state = initialState, action) {
 
     case types.ADD:
       list.push(action.item)
-      return {...state, ...list}
+      return Object.assign({}, state, { planlist: list })
 
     case types.DELETE:
       let newstate = list.filter((item) => item.id != action.id)
-      console.log(newstate)
-      // return Object.assign({}, state, { planlist: newstate })
+      return Object.assign({}, state, { planlist: newstate })
       
-      // let aa = {...state, ...newstate}
-      // console.log(aa)
-      // console.log(state)
-      // return {state, newstate}
-    
     case types.SHOW:
-      return {...state, show: action.show }
-
+      return Object.assign({}, state, { show: action.show })
   }
   return state
 }

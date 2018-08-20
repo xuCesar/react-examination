@@ -33,7 +33,7 @@ class Plan extends Component {
       <div>
         <div className="plant">
             <h3>计划表</h3>
-            <p onClick={this.show}>添加计划</p>
+            <p onClick={this.show.bind(this)}>添加计划</p>
         </div>
         <table className="planlist">
             <thead>
