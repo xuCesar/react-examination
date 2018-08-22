@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import store from '../../redux/store'
-
+import { Link, withRouter } from 'react-router-dom'
 import {show, deletePlan} from '../../actions/plan'
+
+import { List, Avatar } from 'antd';
 
 class Plan extends Component {
   constructor(props) {
+    console.log(props)
     super(props)
-
-    // this.show = this.show.bind(this)
-    // this.delete = this.delete.bind(this)
-    // this.detail = this.detail.bind(this)
+    this.add = this.add.bind(this)
   }
 
   show () {
@@ -27,35 +27,33 @@ class Plan extends Component {
     this.props.history.push(`/detail/${id}`)
   }
 
+  add () {
+    const {history} = this.props
+    history.push('/create')
+  }
+
   render() {
-    let list  = this.props.planlist.planlist
+    let data = this.props.planlist.planlist
     return (
       <div>
         <div className="plant">
             <h3>计划表</h3>
-            <p onClick={this.show.bind(this)}>添加计划</p>
+            <p onClick={this.add}>添加计划</p>
         </div>
-        <table className="planlist">
-            <thead>
-                <tr>
-                    <th>标题</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                  list.map((item, index) => {
-                    return (
-                      <tr key={index}>
-                          <td className="plan-title" onClick={this.detail.bind(this, item.id)}>{item.title}</td>
-                          <td className="plan-delect" onClick={this.delete.bind(this, item.id)}>删除</td>
-                      </tr>
-                    )
-                  })
-                }
-                
-            </tbody>
-        </table>
+        <div className="planlist">
+          <List
+            itemLayout="horizontal"
+            dataSource={data}
+            renderItem={item => (
+              <List.Item>
+                <List.Item.Meta
+                  title={ <Link to={`/detail/${item.id}`}>{item.title}</Link> }
+                  description={item.content}
+                />
+              </List.Item>
+            )}
+          />
+        </div>
       </div>
     );
   }
@@ -67,4 +65,6 @@ const mapStateToProps = function(store) {
   }
 }
 
-export default connect(mapStateToProps)(Plan)
+// export default connect(mapStateToProps)(Plan)
+export default withRouter(connect(mapStateToProps)(Plan))
+// export default Plan

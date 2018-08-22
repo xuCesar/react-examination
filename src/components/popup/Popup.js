@@ -9,31 +9,75 @@ class Pupop extends Component{
     super(props)
     this.state = {
       id: '',
-      title: '1',
-      content: '1'
+      title: '',
+      content: ''
     }
+    this.close = this.close.bind(this)
+    this.confirm = this.confirm.bind(this)
   }
+
+  close () {
+    let s = this.props.planlist.show
+    this.setState({
+      id: '',
+      title: '',
+      content: ''
+    })
+    store.dispatch(show(!s))
+  }
+
+  handleChange (str, e) {
+    this.setState({
+      id: Math.ceil(Math.random()*10000),
+      [str]: e.target.value
+    })
+  }
+
+  confirm () {
+    let _this = this
+    console.log(this.state)
+    store.dispatch(addPlan(this.state))
+    this.setState({
+      id: '',
+      title: '',
+      content: ''
+    })
+    this.close()
+    setTimeout(function(){
+      console.log(_this.state)
+    }, 1000)
+  }
+
+
   render() {
-    let self = this;
+    let { show } = this.props.planlist
     return (
-      <section className="popup" style={{display: 'block'}}>
+      <section className="popup" style={ show ? {} : {display: 'none'}}>
         <div className="pbox">
-          <span className="close">X</span>
+          <span className="close" onClick={this.close}>X</span>
           <div>
             <h4>计划标题</h4>
-            <input value={this.state.title} placeholder="请输入计划标题"/>
+            <input onChange={this.handleChange.bind(this, 'title')} value={this.state.title} placeholder="请输入计划标题"/>
           </div>
           <div>
             <h4>计划内容</h4>
-            <textarea value={this.state.content} placeholder="请输入计划内容" rows="3"></textarea>
+            <textarea onChange={this.handleChange.bind(this, 'content')}  value={this.state.content} placeholder="请输入计划内容" rows="3"></textarea>
           </div>
           <div className="pBtn">
-            <span>取消</span>
-            <span>确认</span>
+            <span onClick={this.close}>取消</span>
+            <span onClick={this.confirm}>确认</span>
           </div>
         </div>
       </section>
     )
   }
 }
-export default Pupop
+
+const mapStateToProps = function(store) {
+  console.log(store)
+  return {
+    planlist: store.planlist
+  }
+}
+
+export default connect(mapStateToProps)(Pupop)
